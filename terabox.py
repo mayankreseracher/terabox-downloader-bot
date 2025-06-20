@@ -5,6 +5,7 @@ from urllib.parse import parse_qs, urlparse
 import requests
 
 from tools import get_formatted_size
+from security import safe_requests
 
 
 def check_url_patterns(url):
@@ -101,7 +102,7 @@ def extract_surl_from_url(url: str) -> str | None:
 def get_data(url: str):
     netloc = urlparse(url).netloc
     url = url.replace(netloc, "1024terabox.com")
-    response = requests.get(
+    response = safe_requests.get(
         url,
         data="",
     )
