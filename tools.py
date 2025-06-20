@@ -12,6 +12,7 @@ from telethon import TelegramClient
 
 from config import BOT_USERNAME, PUBLIC_EARN_API
 from redis_db import db
+from security import safe_requests
 
 
 def check_url_patterns(url: str) -> bool:
@@ -188,7 +189,7 @@ async def download_file(
     callback=None,
 ) -> str | bool:
     try:
-        response = requests.get(url, stream=True)
+        response = safe_requests.get(url, stream=True)
         response.raise_for_status()
         with suppress(
             requests.exceptions.ChunkedEncodingError,
@@ -235,7 +236,7 @@ def download_image_to_bytesio(url: str, filename: str) -> BytesIO | None:
         BytesIO: The image data as a BytesIO object, or None if the download failed.
     """
     try:
-        response = requests.get(url)
+        response = safe_requests.get(url)
         content = BytesIO()
         content.name = filename
         if response.status_code == 200:
@@ -270,7 +271,7 @@ def generate_shortenedUrl(
 ):
     try:
         uid = str(uuid.uuid4())
-        data = requests.get(
+        data = safe_requests.get(
             "https://publicearn.com/api",
             params={
                 "api": PUBLIC_EARN_API,
